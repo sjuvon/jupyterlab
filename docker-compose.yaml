@@ -1,0 +1,25 @@
+# Parsed using .env file:
+
+version: '${YAML_VERSION}'
+services:
+  jupyter:
+    image: '${IMAGE_NAME}:${IMAGE_VERSION}'
+    build:
+      context: '${BUILD_CONTEXT}'
+      args:
+        DOCKERFILE_PORT: '${PORT_CONTAINER}'
+        DOCKERFILE_USER: '${USER_CONTAINER}'
+        DOCKERFILE_WORKDIR: '${VOLUME_HOME_CONTAINER}'
+    container_name: '${CONTAINER_NAME}'
+    user: '${USER_CONTAINER}' # See Dockerfile
+    volumes:
+      - '${VOLUME_HOME_HOST}:${VOLUME_HOME_CONTAINER}'
+    ports:
+      - '${PORT_HOST}:${PORT_CONTAINER}' # See Dockerfile
+    restart: '${RESTART}'
+    command: '${COMMAND}'
+    healthcheck:
+      test: '${HEALTHCHECK_TEST}'
+      interval: '${HEALTHCHECK_INTERVAL}'
+      timeout: '${HEALTHCHECK_TIMEOUT}'
+      retries: ${HEALTHCHECK_RETRIES}
