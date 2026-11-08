@@ -1,25 +1,25 @@
 # Parsed using .env file:
 
-version: '${YAML_VERSION}'
+version: '${APP_VERSION}'
 services:
   jupyter:
-    image: '${IMAGE_NAME}:${IMAGE_VERSION}'
+    image: '${APP_NAME}:${APP_VERSION}'
     build:
-      context: '${BUILD_CONTEXT}'
+      context: '${HOST_BUILD_CONTEXT}'
       args:
-        DOCKERFILE_PORT: '${PORT_CONTAINER}'
-        DOCKERFILE_USER: '${USER_CONTAINER}'
-        DOCKERFILE_WORKDIR: '${VOLUME_HOME_CONTAINER}'
-    container_name: '${CONTAINER_NAME}'
-    user: '${USER_CONTAINER}' # See Dockerfile
+        APP_PORT: '${APP_PORT}'
+        APP_USER: '${APP_USER}'
+        APP_HOME: '${APP_HOME}'
+    container_name: '${APP_CONTAINER_NAME}'
+    user: '${APP_USER}'
     volumes:
-      - '${VOLUME_HOME_HOST}:${VOLUME_HOME_CONTAINER}'
+      - '${HOST_HOME}:${APP_HOME}'
     ports:
-      - '${PORT_HOST}:${PORT_CONTAINER}' # See Dockerfile
-    restart: '${RESTART}'
-    command: '${COMMAND}'
+      - '${HOST_PORT}:${APP_PORT}'
+    restart: '${APP_RESTART}'
+    command: '${APP_COMMAND}'
     healthcheck:
-      test: '${HEALTHCHECK_TEST}'
-      interval: '${HEALTHCHECK_INTERVAL}'
-      timeout: '${HEALTHCHECK_TIMEOUT}'
-      retries: ${HEALTHCHECK_RETRIES}
+      test: '${APP_HEALTHCHECK_TEST}'
+      interval: '${APP_HEALTHCHECK_INTERVAL}'
+      timeout: '${APP_HEALTHCHECK_TIMEOUT}'
+      retries: ${APP_HEALTHCHECK_RETRIES}

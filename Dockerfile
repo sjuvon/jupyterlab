@@ -3,9 +3,9 @@
 # Container for JupyterLab
 #
 # 1. Install system libraries
-# 2. Create user and group
+# 2. Create user & group
 # 3. Install Python packages (including JupyterLab)
-# 4. Switch to user before finishing
+# 4. Switch user
 ########################################################################
 
 # Host: Ubuntu 24.04.4
@@ -14,9 +14,9 @@ FROM python:3.11.11-slim
 LABEL maintainer="sj"
 
 # Parsed using env file at docker compose:
-ARG DOCKERFILE_PORT
-ARG DOCKERFILE_USER
-ARG DOCKERFILE_WORKDIR
+ARG APP_HOME
+ARG APP_PORT
+ARG APP_USER
 
 USER root
 
@@ -28,22 +28,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     htop \
     btop \
-    curl
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-EXPOSE $DOCKERFILE_PORT
+EXPOSE $APP_PORT
 
-RUN addgroup jupyter
-RUN adduser --uid 1001 --ingroup jupyter $DOCKERFILE_USER
+RUN addgroup jupyter \
+    && adduser --uid 1001 --ingroup jupyter $APP_USER
 
-WORKDIR $DOCKERFILE_WORKDIR
-COPY --chown=$DOCKERFILE_USER:jupyter requirements.txt ./requirements.txt
+WORKDIR $APP_HOME
 
-RUN python -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --chown=$APP_USER:jupyter requirements.txt ./requirements.txt
 
-COPY --chown=$DOCKERFILE_USER:jupyter . .
+RUN python -m pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /root/.cache/pip
 
-USER $DOCKERFILE_USER
+COPY --chown=$APP_USER:jupyter . .
+
+USER $APP_USER
 
